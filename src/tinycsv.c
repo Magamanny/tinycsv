@@ -10,11 +10,6 @@ int csv_read(csv_st *csv)
     int numFields=0;
     int i=csv->iter,j=0,k=0;
     //TCSV_DEBUG("Csv Readed call iter=%d\r\n",csv->iter);
-    // clear fields
-    for(int i=0;i<5;i++)
-    {
-        //csv->field[i][0]=0;
-    }
     for(;i<(csv->iter+CSV_LINE_LEN);i++)
     {
         //TCSV_DEBUG("f=%c %d",csv->file[i],i);
@@ -41,6 +36,7 @@ int csv_read(csv_st *csv)
         // line complete
         else if(csv->file[i]=='\n')
         {
+            csv->field[k][j]=0;
             //TCSV_DEBUG("Break\r\n");
             csv->iter = i+1;
             numFields=k+1;

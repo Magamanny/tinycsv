@@ -3,20 +3,21 @@
 #include "tinycsv.h"
 // these should be above the actual expected lengths, I use +10 above
 
-csv_st csv_s;
 const char file[]=
 "Name,Age,Gender,Email\r\n\
-John Doe,25,Male,johndoe@example.com\r\n\
-Jane Smith,30,Female,janesmith@example.com\r\n\
+Adam Johnson,25,Male,johndoe@example.com\r\n\
+Jane Smith,30,Female,js.com\r\n\
 Adam Johnson,40,Male,adamjohnson@example.com\r\n\
-Emily Davis,35,Female,emilydavis@example.com\r\n";
+Ali,35,Male,ali@example.com\r\n";
 int main() {
+    csv_st csv_s;
     char header[5][CSV_FIELD_LEN]; // to store headers
     int numHeader=0;
     int fileRow=0;
     // Write C code here
     printf("Hello world\r\n");
     // first line is the header
+    csv_s.iter = 0;
     csv_s.file = file; // assign file pointer used by the csv_read function
     fileRow = csv_count_rows(&csv_s);
     numHeader = csv_read(&csv_s); // number of header/fields
