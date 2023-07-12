@@ -12,5 +12,4 @@ typedef struct csv_st{
 } csv_st;
 
 int csv_read(csv_st *csv);
-void csv_init(csv_st *csv);
 #endif

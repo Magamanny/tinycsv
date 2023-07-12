@@ -1,15 +1,5 @@
 #include "tinycsv.h"
-void csv_init(csv_st *csv)
-{
-    csv->num = csv_read(csv);
-    for(int i=0;i<5;i++)
-    {
-        for(int j=0;j<20;j++)
-        {
-            csv->header[i][j]=csv->field[i][j];
-        }
-    }
-}
+
 // return the number of field readed
 int csv_read(csv_st *csv)
 {
