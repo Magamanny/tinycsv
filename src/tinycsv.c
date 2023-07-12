@@ -1,7 +1,10 @@
 #include "tinycsv.h"
 // private defines
 #define TCSV_DEBUG(...) printf(__VA_ARGS__, "")
-// return the number of field readed
+// Return the number of field readed
+// The data is readed line by line, each call to this function
+// return the next line, the fields are loaded to csv.field[] array
+// the return value is to be used to detect end of file.
 int csv_read(csv_st *csv)
 {
     int numFields=0;
@@ -30,7 +33,7 @@ int csv_read(csv_st *csv)
         }
         else if(csv->file[i]=='\0')
         {
-            TCSV_DEBUG("End iter=%d",i);
+            //TCSV_DEBUG("End iter=%d",i);
             numFields=0;
             // end of file
             break;
@@ -50,4 +53,28 @@ int csv_read(csv_st *csv)
         }
     } // end of for
     return numFields;
+}
+// This function determines the number of rows in the csv file
+// it return the rows, and it does this by iterating over the file till 'null'
+int csv_count_rows(csv_st *csv)
+{
+    int hasrow=0;
+    int rows=0;
+    for(int i=0;i<CSV_FILE_LEN;i++)
+    {
+        if(csv->file[i]=='\0')
+        {
+            break;
+        }
+        else if(csv->file[i]=='\n')
+        {
+            hasrow=1;
+            rows++;
+        }
+    }
+    if(hasrow)
+    {
+        rows = rows-1;
+    }
+    return rows;
 }

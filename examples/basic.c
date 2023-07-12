@@ -13,11 +13,14 @@ Emily Davis,35,Female,emilydavis@example.com\r\n";
 int main() {
     char header[5][CSV_FIELD_LEN]; // to store headers
     int numHeader=0;
+    int fileRow=0;
     // Write C code here
     printf("Hello world\r\n");
     // first line is the header
     csv_s.file = file; // assign file pointer used by the csv_read function
+    fileRow = csv_count_rows(&csv_s);
     numHeader = csv_read(&csv_s); // number of header/fields
+    printf("col=%d, rows=%d\r\n",numHeader,fileRow);
     // copy the header, to a header varialbe for easy use
     for(int i=0;i<5;i++)
     {
@@ -26,7 +29,7 @@ int main() {
             header[i][j]=csv_s.field[i][j];
         }
     }
-    // now read file
+    // now read file, we can also read by using the 'row' as limit
     for(int i=0;i<50;i++)
     {
         // csv_read return 0 if no filed is read, otherwise the number of fields read
