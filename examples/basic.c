@@ -5,23 +5,25 @@
 
 csv_st csv_s;
 const char file[]=
-"Name,Age,Gender,Email\n\
-John Doe,25,Male,johndoe@example.com\n\
-Jane Smith,30,Female,janesmith@example.com\n\
-Adam Johnson,40,Male,adamjohnson@example.com\n\
-Emily Davis,35,Female,emilydavis@example.com\n";
+"Name,Age,Gender,Email\r\n\
+John Doe,25,Male,johndoe@example.com\r\n\
+Jane Smith,30,Female,janesmith@example.com\r\n\
+Adam Johnson,40,Male,adamjohnson@example.com\r\n\
+Emily Davis,35,Female,emilydavis@example.com\r\n";
 int main() {
+    char header[5][CSV_FIELD_LEN]; // to store headers
+    int numHeader=0;
     // Write C code here
     printf("Hello world\r\n");
     // first line is the header
     csv_s.file = file; // assign file pointer used by the csv_read function
-    csv_s.num = csv_read(&csv_s); // number of header/fields
+    numHeader = csv_read(&csv_s); // number of header/fields
     // copy the header, to a header varialbe for easy use
     for(int i=0;i<5;i++)
     {
         for(int j=0;j<20;j++)
         {
-            csv_s.header[i][j]=csv_s.field[i][j];
+            header[i][j]=csv_s.field[i][j];
         }
     }
     // now read file
@@ -30,9 +32,9 @@ int main() {
         // csv_read return 0 if no filed is read, otherwise the number of fields read
         if(csv_read(&csv_s))
         {
-            for(int j=0;j<csv_s.num;j++)
+            for(int j=0;j<numHeader;j++)
             {
-                printf("%s = %s\r\n",csv_s.header[j],csv_s.field[j]);
+                printf("%s = %s\r\n",header[j],csv_s.field[j]);
             }
             printf("----------\r\n");
         }
