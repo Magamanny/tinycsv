@@ -9,10 +9,14 @@
 #define CSV_FILE_LEN 1024
 typedef struct csv_st{
     int iter;
-    const char *file; // pointer to the file
+    int len;
+    int cols;
+    int rows;
+    char (*rfile)(int);// pointer to the file
     char field[5][CSV_FIELD_LEN];
 } csv_st;
 
 int csv_read(csv_st *csv);
+int csv_write(csv_st *csv);
 int csv_count_rows(csv_st *csv);
 #endif
