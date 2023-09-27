@@ -37,6 +37,7 @@ int main() {
     // first line is the header
     csv_s.iter = 0;
     csv_s.rfile = rfile; // assign file pointer used by the csv_read function
+    csv_open(&csv_s);
     fileRow = csv_count_rows(&csv_s);
     numHeader = csv_read(&csv_s); // number of header/fields
     printf("col=%d, rows=%d\r\n",numHeader,fileRow);

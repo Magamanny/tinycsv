@@ -27,7 +27,8 @@ int main() {
     csv_s.cols = 4;
     csv_s.afile = afile;
     csv_s.rfile = rfile;
-
+    
+    csv_open(&csv_s);
     fileRow = csv_count_rows(&csv_s);
     numHeader = csv_read(&csv_s); // number of header/fields
     printf("col=%d, rows=%d\r\n",numHeader,fileRow);
@@ -46,7 +47,9 @@ int main() {
     strcpy(csv_s.field[3],"sannan2020@gmail.com");
 
     csv_write(&csv_s);
+    strcpy(csv_s.field[0],"Khan");
     csv_write(&csv_s);
+    strcpy(csv_s.field[0],"Das");
     csv_write(&csv_s);
     
     fileRow = csv_count_rows(&csv_s);
@@ -59,7 +62,7 @@ int main() {
         {
             for(int j=0;j<numHeader;j++)
             {
-                printf("%s = %s\r\n",header[j],csv_s.field[j]);
+                printf("%s = %s, ",header[j],csv_s.field[j]);
             }
             printf("----------\r\n");
         }
@@ -68,6 +71,7 @@ int main() {
             printf("No more data to read\r\n");
             break;
         }
-    }    
+    }
+    printf("%s",file);
     return 0;
 }

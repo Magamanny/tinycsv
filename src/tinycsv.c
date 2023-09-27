@@ -55,6 +55,12 @@ int csv_read(csv_st *csv)
     } // end of for
     return numFields;
 }
+// reset iter so that read can reiter over it
+int csv_open(csv_st *csv)
+{
+    csv->iter=0;
+    return 0;
+}
 // Wirte the fields in csv->fileds to csv file, append after last row.
 int csv_write(csv_st *csv)
 {
