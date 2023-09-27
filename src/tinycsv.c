@@ -13,7 +13,10 @@ int csv_read(csv_st *csv)
     //TCSV_DEBUG("Csv Readed call iter=%d\r\n",csv->iter);
     for(;i<(csv->iter+CSV_LINE_LEN);i++)
     {
-        csv_ch = csv->rfile(i);
+        if(csv->rfile!=0)
+        {
+            csv_ch = csv->rfile(i);
+        }
         //TCSV_DEBUG("f=%c %d",csv->file[i],i);
         // field completed
         if(csv_ch==',')
@@ -79,7 +82,13 @@ int csv_write(csv_st *csv)
         wData[k+1] = 0;
     }
     //printf("--------\r\n");
-    //printf("%s",wData);
+    for(i=0;i<k+1;i++)
+    {
+        if(csv->afile!=0)
+        {
+            csv->afile(wData[i]);
+        }
+    }
     //strcat(csv->file, wData);
 }
 // This function determines the number of rows in the csv file
@@ -91,7 +100,10 @@ int csv_count_rows(csv_st *csv)
     char csv_ch;
     for(int i=0;i<CSV_FILE_LEN;i++)
     {
-        csv_ch = csv->rfile(i);
+        if(csv->rfile!=0)
+        {
+            csv_ch = csv->rfile(i);
+        }
         if(csv_ch=='\0')
         {
             break;

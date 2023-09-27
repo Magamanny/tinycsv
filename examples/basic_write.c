@@ -6,6 +6,15 @@
 
 char file[1024]=
 "Name,Age,Gender,Email\r\n";
+int afile(char ch)
+{
+    strncat(file, &ch, 1);
+    return 0;
+}
+char rfile(int a)
+{
+    return file[a];
+}
 int main() {
     csv_st csv_s;
     char header[5][CSV_FIELD_LEN]; // to store headers
@@ -16,7 +25,8 @@ int main() {
     // first line is the header
     csv_s.iter = 0;
     csv_s.cols = 4;
-    csv_s.len = strlen(file);
+    csv_s.afile = afile;
+    csv_s.rfile = rfile;
 
     fileRow = csv_count_rows(&csv_s);
     numHeader = csv_read(&csv_s); // number of header/fields

@@ -12,7 +12,8 @@ typedef struct csv_st{
     int len;
     int cols;
     int rows;
-    char (*rfile)(int);// pointer to the file
+    char (*rfile)(int);// file read function
+    int (*afile)(char); // file append data function
     char field[5][CSV_FIELD_LEN];
 } csv_st;
 
