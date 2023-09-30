@@ -50,17 +50,6 @@ void test_csv_write()
     strcpy(csv_s.field[3],"sannan2020@gmail.com");
     csv_write(&csv_s);
     csv_open(&csv_s);
-    for(int i=0;i<50;i++)
-    {
-        if(csv_read(&csv_s)==0)
-        {
-            TEST_ASSERT_EQUAL_STRING("Sannan",csv_s.field[0]);
-            TEST_ASSERT_EQUAL_STRING("22",csv_s.field[1]);
-            TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
-            TEST_ASSERT_EQUAL_STRING("sannan2020@gmail.com",csv_s.field[3]);
-            break;
-        }
-    }
 
     strcpy(csv_s.field[0],"Saal Khan");
     strcpy(csv_s.field[1],"35");
@@ -68,17 +57,6 @@ void test_csv_write()
     strcpy(csv_s.field[3],"saal2020@gmail.com");
     csv_write(&csv_s);
     csv_open(&csv_s);
-    for(int i=0;i<50;i++)
-    {
-        if(csv_read(&csv_s)==0)
-        {
-            TEST_ASSERT_EQUAL_STRING("Saal Khan",csv_s.field[0]);
-            TEST_ASSERT_EQUAL_STRING("35",csv_s.field[1]);
-            TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
-            TEST_ASSERT_EQUAL_STRING("saal2020@gmail.com",csv_s.field[3]);
-            break;
-        }
-    }
 
     strcpy(csv_s.field[0],"Dazy Zing");
     strcpy(csv_s.field[1],"19");
@@ -86,17 +64,32 @@ void test_csv_write()
     strcpy(csv_s.field[3],"dazyatyou@openass.com");
     csv_write(&csv_s);
     csv_open(&csv_s);
-    for(int i=0;i<50;i++)
-    {
-        if(csv_read(&csv_s)==0)
-        {
-            TEST_ASSERT_EQUAL_STRING("Dazy Zing",csv_s.field[0]);
-            TEST_ASSERT_EQUAL_STRING("19",csv_s.field[1]);
-            TEST_ASSERT_EQUAL_STRING("Female",csv_s.field[2]);
-            TEST_ASSERT_EQUAL_STRING("dazyatyou@openass.com",csv_s.field[3]);
-            break;
-        }
-    }
+    csv_read(&csv_s);
+    TEST_ASSERT_EQUAL_STRING("Name",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("Age",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Gender",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("Email",csv_s.field[3]);
+    csv_read(&csv_s);
+    csv_read(&csv_s);
+    csv_read(&csv_s);
+    csv_read(&csv_s);
+    
+    csv_read(&csv_s);
+    TEST_ASSERT_EQUAL_STRING("Sannan",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("22",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("sannan2020@gmail.com",csv_s.field[3]);
+    csv_read(&csv_s);
+    TEST_ASSERT_EQUAL_STRING("Saal Khan",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("35",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("saal2020@gmail.com",csv_s.field[3]);
+    csv_read(&csv_s);
+    TEST_ASSERT_EQUAL_STRING("Dazy Zing",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("19",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Female",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("dazyatyou@openass.com",csv_s.field[3]);
+
 }
 void test_csv_read_1()
 {
