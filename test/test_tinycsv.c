@@ -16,7 +16,12 @@ int afile(char ch)
     file[eof] = 0;
     return 0;
 }
-char rfile(int a)
+int wfile(uint32_t addr,char ch)
+{
+    file[addr] = ch;
+    return 0;
+}
+char rfile(uint32_t a)
 {
     return file[a];
 }
@@ -25,8 +30,10 @@ void setUp(void)
 {
     csv_s.iter = 0;
     csv_s.cols = 4;
-    csv_s.afile = afile;
+    csv_s.dic_addr = 512;
     csv_s.rfile = rfile;
+    csv_s.wfile = wfile;
+    csv_s.afile = afile;
 
     for(int i=0;i<1024;i++)
     {
@@ -89,9 +96,24 @@ void test_csv_write()
     TEST_ASSERT_EQUAL_STRING("19",csv_s.field[1]);
     TEST_ASSERT_EQUAL_STRING("Female",csv_s.field[2]);
     TEST_ASSERT_EQUAL_STRING("dazyatyou@openass.com",csv_s.field[3]);
-
 }
-void test_csv_read_1()
+void test_csv_write2()
+{
+    file[0]=0;
+    csv_open(&csv_s);
+    strcpy(csv_s.field[0],"Sannan Aheman Qurashi");
+    strcpy(csv_s.field[1],"22");
+    strcpy(csv_s.field[2],"Male");
+    strcpy(csv_s.field[3],"sannan2020@gmail.com");
+    csv_write(&csv_s);
+    // read back
+    csv_read(&csv_s);
+    TEST_ASSERT_EQUAL_STRING("Sannan Aheman Qurashi",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("22",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("sannan2020@gmail.com",csv_s.field[3]);
+}
+void test_csv_read1()
 {
     int count=0;
     int numHeader;
@@ -116,7 +138,7 @@ void test_csv_read_1()
     }
     TEST_ASSERT_EQUAL_INT (4,count);
 }
-void test_csv_read_2()
+void test_csv_read2()
 {
     csv_open(&csv_s);
     csv_read(&csv_s); // number of header/fields
@@ -138,6 +160,33 @@ void test_csv_read_2()
     TEST_ASSERT_EQUAL_STRING("jsmith2022@fake.com",csv_s.field[3]);
 
     csv_read(&csv_s);
+    TEST_ASSERT_EQUAL_STRING("Adam Smith",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("40",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("adamsmith@example.com",csv_s.field[3]);
+}
+void test_csv_read3()
+{
+    csv_open(&csv_s);
+    csv_read_row(&csv_s, 2);
+    TEST_ASSERT_EQUAL_STRING("Jane Smith",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("25",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Female",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("jsmith2022@fake.com",csv_s.field[3]);
+
+    csv_read_row(&csv_s, 0);
+    TEST_ASSERT_EQUAL_STRING("Name",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("Age",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Gender",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("Email",csv_s.field[3]);
+
+    csv_read_row(&csv_s,1);
+    TEST_ASSERT_EQUAL_STRING("Adam Johnson",csv_s.field[0]);
+    TEST_ASSERT_EQUAL_STRING("30",csv_s.field[1]);
+    TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
+    TEST_ASSERT_EQUAL_STRING("johndoe@example.com",csv_s.field[3]);
+
+    csv_read_row(&csv_s,3);
     TEST_ASSERT_EQUAL_STRING("Adam Smith",csv_s.field[0]);
     TEST_ASSERT_EQUAL_STRING("40",csv_s.field[1]);
     TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);

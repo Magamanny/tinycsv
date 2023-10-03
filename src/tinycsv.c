@@ -1,4 +1,5 @@
 #include "tinycsv.h"
+#include "stdint.h"
 // private defines
 #define TCSV_DEBUG(...) printf(__VA_ARGS__, "")
 // Return the number of field readed
@@ -55,9 +56,35 @@ int csv_read(csv_st *csv)
     } // end of for
     return numFields;
 }
+// read a row from the csv file, i is 0 to CSV_MAX_ROWS
+int csv_read_row(csv_st *csv, int index)
+{
+    int addr;
+    addr = csv->rfile(csv->dic_addr + index+1);
+    csv->iter = addr;
+    return csv_read(csv);
+}
 // reset iter so that read can reiter over it
 int csv_open(csv_st *csv)
 {
+    int count=0;
+    int siter;
+    csv->iter=0;
+    for(int i=0;i<CSV_DIC_SIZE;i++)
+    {
+        // csv_read return 0 if no filed is read, otherwise the number of fields read
+        siter = csv->iter;
+        if(csv_read(csv))
+        {
+            csv->wfile(csv->dic_addr+i+1,siter);
+            count++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    csv->wfile(csv->dic_addr,count);
     csv->iter=0;
     return 0;
 }
