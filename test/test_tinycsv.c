@@ -136,7 +136,7 @@ void test_csv_write3()
     file[0]=0;
     printf("write3\r\n");
     csv_open(&csv_s);
-    printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
+    //printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
     for(int i=0;i<5;i++)
     {
         strcpy(csv_s.field[0],names[i]);
@@ -149,8 +149,8 @@ void test_csv_write3()
     {
         if(csv_read(&csv_s))
         {
-            printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
-            printf("Name = %s \r\n",csv_s.field[0]);
+            //printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
+            //printf("Name = %s \r\n",csv_s.field[0]);
             TEST_ASSERT_EQUAL_STRING(names[i],csv_s.field[0]);
             TEST_ASSERT_EQUAL_STRING(age[i],csv_s.field[1]);
             TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
