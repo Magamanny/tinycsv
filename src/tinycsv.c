@@ -9,10 +9,10 @@
 int csv_read(csv_st *csv)
 {
     int numFields=0;
-    int i=csv->iter,j=0,k=0;
+    int i=csv->raddr,j=0,k=0;
     char csv_ch;
     //TCSV_DEBUG("Csv Readed call iter=%d\r\n",csv->iter);
-    for(;i<(csv->iter+CSV_LINE_LEN);i++)
+    for(;i<(csv->raddr+CSV_LINE_LEN);i++)
     {
         if(csv->rfile!=0)
         {
@@ -25,7 +25,7 @@ int csv_read(csv_st *csv)
             csv->field[k][j]=0;
             //TCSV_DEBUG("field=%s,index=%d\r\n",csv->field[k],k);
             j=0;
-            k=(k+1)%5;
+            k=(k+1)%5; // max field 5
         }
         else if(csv_ch=='\r')
         {
@@ -44,7 +44,8 @@ int csv_read(csv_st *csv)
         {
             csv->field[k][j]=0;
             //TCSV_DEBUG("Break\r\n");
-            csv->iter = i+1;
+            csv->rrow++;
+            csv->raddr = csv->rrow * CSV_LINE_LEN;
             numFields=k+1;
             break;
         }
@@ -60,41 +61,16 @@ int csv_read(csv_st *csv)
 int csv_read_row(csv_st *csv, int index)
 {
     int addr;
-    if(csv->rfile!=0)
-    {
-        addr = csv->rfile(csv->dic_addr + index+1);
-    }
-    csv->iter = addr;
+    csv->raddr = index * CSV_LINE_LEN;
+    TCSV_DEBUG("row = %d\r\n",csv->raddr);
     return csv_read(csv);
 }
 // reset iter so that read can reiter over it
 int csv_open(csv_st *csv)
 {
-    int count=0;
-    int siter;
-    csv->iter=0;
-    for(int i=0;i<CSV_DIC_SIZE;i++)
-    {
-        // csv_read return 0 if no filed is read, otherwise the number of fields read
-        siter = csv->iter;
-        if(csv_read(csv))
-        {
-            if(csv->wfile!=0)
-            {
-                csv->wfile(csv->dic_addr+i+1,siter);
-            }
-            count++;
-        }
-        else
-        {
-            break;
-        }
-    }
-    if(csv->wfile!=0)
-    {
-        csv->wfile(csv->dic_addr,count);
-    }
-    csv->iter=0;
+    csv->raddr=0;
+    csv->rrow = 0;
+    csv->wrow = csv_count_rows(csv);
     return 0;
 }
 // Wirte the fields in csv->fileds to csv file, append after last row.
@@ -124,20 +100,22 @@ int csv_write(csv_st *csv)
         wData[k+1] = 0;
     }
     //printf("--------\r\n");
+    csv->waddr = csv->wrow*CSV_LINE_LEN;
     for(i=0;i<k+1;i++)
     {
-        if(csv->afile!=0)
+        if(csv->wfile!=0)
         {
-            csv->afile(wData[i]);
+            csv->wfile(csv->waddr,wData[i]);
+            csv->waddr++;
         }
     }
+    csv->wrow++;
     //strcat(csv->file, wData);
 }
 // This function determines the number of rows in the csv file
 // it return the rows, and it does this by iterating over the file till 'null'
 int csv_count_rows(csv_st *csv)
 {
-    int hasrow=0;
     int rows=0;
     char csv_ch;
     for(int i=0;i<CSV_FILE_LEN;i++)
@@ -152,13 +130,10 @@ int csv_count_rows(csv_st *csv)
         }
         else if(csv_ch=='\n')
         {
-            hasrow=1;
             rows++;
+            i = rows*CSV_LINE_LEN-1; // next line
+            //TCSV_DEBUG("%d %d ",i+1,rows);
         }
-    }
-    if(hasrow)
-    {
-        rows = rows-1;
     }
     return rows;
 }

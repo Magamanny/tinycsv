@@ -23,7 +23,6 @@ int main() {
     // Write C code here
     printf("Hello world\r\n");
     // first line is the header
-    csv_s.iter = 0;
     csv_s.cols = 4;
     csv_s.afile = afile;
     csv_s.rfile = rfile;

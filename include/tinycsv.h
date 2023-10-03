@@ -4,18 +4,18 @@
 // max legthn of a single filed
 #define CSV_FIELD_LEN 30
 // max length of line in the csv
-#define CSV_LINE_LEN 100
+#define CSV_LINE_LEN 150
 // max lenght of csv file
 #define CSV_FILE_LEN 1024
-// the dictionary size is how many rows to keep, it is used in index base reading
-// need to load the dictionary before it.
-#define CSV_DIC_SIZE 128
 typedef struct csv_st{
-    int iter;
+    int raddr;
+    int rrow;
+    int waddr;
+    int wrow;
+    
     int len;
     int cols;
     int rows;
-    int dic_addr;
     char (*rfile)(int);// file read function
     int (*wfile)(int,char); // file write byte to file
     int (*afile)(char); // file append data function

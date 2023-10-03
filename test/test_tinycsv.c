@@ -8,7 +8,7 @@ Adam Johnson,30,Male,johndoe@example.com\r\n\
 Jane Smith,25,Female,jsmith2022@fake.com\r\n\
 Adam Smith,40,Male,adamsmith@example.com\r\n\
 Yuli,20,Female,yoyo20@example.com\r\n";
-char file[1024]={0};
+char file[1024+150]={0};
 csv_st csv_s;
 int afile(char ch)
 {
@@ -23,27 +23,41 @@ int wfile(uint32_t addr,char ch)
 }
 char rfile(uint32_t a)
 {
-    return file[a];
+    if(a>=2048)
+        return 0;
+    else
+        return file[a];
 }
 
 void setUp(void)
 {
-    csv_s.iter = 0;
+    csv_s.raddr = 0;
     csv_s.cols = 4;
-    csv_s.dic_addr = 512;
     csv_s.rfile = rfile;
     csv_s.wfile = wfile;
     csv_s.afile = afile;
-
-    for(int i=0;i<1024;i++)
+    for(int i=0,j=0,k=0;i<256;i++)
     {
-        file[i] = fixfile[i];
-        if(file[i]==0)
+        file[j] = fixfile[i];
+        if(fixfile[i]=='\n')
         {
-            eof=i;
-            break;
+            k++;
+            j = 150*k;
+        }
+        else
+        {
+            j++;
         }
     }
+    /*
+    for(int i=0;i<1024;i++)
+    {
+        if(i%150==0)
+        {
+            printf("%c\r\n",file[i]);
+        }
+    }
+    */
 }
 
 void tearDown(void)
@@ -51,26 +65,24 @@ void tearDown(void)
 }
 void test_csv_write()
 {
+    csv_open(&csv_s);
     strcpy(csv_s.field[0],"Sannan");
     strcpy(csv_s.field[1],"22");
     strcpy(csv_s.field[2],"Male");
     strcpy(csv_s.field[3],"sannan2020@gmail.com");
     csv_write(&csv_s);
-    csv_open(&csv_s);
 
     strcpy(csv_s.field[0],"Saal Khan");
     strcpy(csv_s.field[1],"35");
     strcpy(csv_s.field[2],"Male");
     strcpy(csv_s.field[3],"saal2020@gmail.com");
     csv_write(&csv_s);
-    csv_open(&csv_s);
 
     strcpy(csv_s.field[0],"Dazy Zing");
     strcpy(csv_s.field[1],"19");
     strcpy(csv_s.field[2],"Female");
     strcpy(csv_s.field[3],"dazyatyou@openass.com");
     csv_write(&csv_s);
-    csv_open(&csv_s);
     csv_read(&csv_s);
     TEST_ASSERT_EQUAL_STRING("Name",csv_s.field[0]);
     TEST_ASSERT_EQUAL_STRING("Age",csv_s.field[1]);
@@ -115,6 +127,7 @@ void test_csv_write2()
 }
 void test_csv_read1()
 {
+    printf("read1\r\n");
     int count=0;
     int numHeader;
     csv_open(&csv_s);
@@ -195,11 +208,12 @@ void test_csv_read3()
 void test_csv_count_rows()
 {
     int fileRow;
+    csv_open(&csv_s);
     fileRow = csv_count_rows(&csv_s);
-    TEST_ASSERT_EQUAL_INT (4,fileRow);
+    TEST_ASSERT_EQUAL_INT (5,fileRow);
 
     fileRow = csv_count_rows(&csv_s);
-    TEST_ASSERT_EQUAL_INT (4,fileRow);
+    TEST_ASSERT_EQUAL_INT (5,fileRow);
 }
 void test_tinycsv(void)
 {
