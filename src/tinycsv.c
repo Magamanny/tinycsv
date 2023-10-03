@@ -14,6 +14,10 @@ int csv_read(csv_st *csv)
     //TCSV_DEBUG("Csv Readed call iter=%d\r\n",csv->iter);
     for(;i<(csv->raddr+CSV_LINE_LEN);i++)
     {
+        if(csv->rrow >= csv->rows)
+        {
+            break;
+        }
         if(csv->rfile!=0)
         {
             csv_ch = csv->rfile(i);
@@ -62,7 +66,7 @@ int csv_read_row(csv_st *csv, int index)
 {
     int addr;
     csv->raddr = index * CSV_LINE_LEN;
-    TCSV_DEBUG("row = %d\r\n",csv->raddr);
+    //TCSV_DEBUG("row = %d\r\n",csv->raddr);
     return csv_read(csv);
 }
 // reset iter so that read can reiter over it
@@ -71,6 +75,7 @@ int csv_open(csv_st *csv)
     csv->raddr=0;
     csv->rrow = 0;
     csv->wrow = csv_count_rows(csv);
+    csv->rows = csv->wrow;
     return 0;
 }
 // Wirte the fields in csv->fileds to csv file, append after last row.
@@ -110,6 +115,7 @@ int csv_write(csv_st *csv)
         }
     }
     csv->wrow++;
+    csv->rows++;
     //strcat(csv->file, wData);
 }
 // This function determines the number of rows in the csv file

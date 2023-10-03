@@ -66,17 +66,21 @@ void tearDown(void)
 void test_csv_write()
 {
     csv_open(&csv_s);
+    printf("write\r\n");
+    printf("%d %d %d\r\n",csv_s.rrow, csv_s.wrow,csv_s.rows);
     strcpy(csv_s.field[0],"Sannan");
     strcpy(csv_s.field[1],"22");
     strcpy(csv_s.field[2],"Male");
     strcpy(csv_s.field[3],"sannan2020@gmail.com");
     csv_write(&csv_s);
+    printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
 
     strcpy(csv_s.field[0],"Saal Khan");
     strcpy(csv_s.field[1],"35");
     strcpy(csv_s.field[2],"Male");
     strcpy(csv_s.field[3],"saal2020@gmail.com");
     csv_write(&csv_s);
+    printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
 
     strcpy(csv_s.field[0],"Dazy Zing");
     strcpy(csv_s.field[1],"19");
@@ -124,6 +128,36 @@ void test_csv_write2()
     TEST_ASSERT_EQUAL_STRING("22",csv_s.field[1]);
     TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
     TEST_ASSERT_EQUAL_STRING("sannan2020@gmail.com",csv_s.field[3]);
+}
+void test_csv_write3()
+{
+    char names[5][20] = {"Salman","Sannan","Ali","Ebad","Hassan"};
+    char age[5][5] = {"20","25","34","56","19"};
+    file[0]=0;
+    printf("write3\r\n");
+    csv_open(&csv_s);
+    printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
+    for(int i=0;i<5;i++)
+    {
+        strcpy(csv_s.field[0],names[i]);
+        strcpy(csv_s.field[1],age[i]);
+        strcpy(csv_s.field[2],"Male");
+        strcpy(csv_s.field[3],"salman2020@gmail.com");
+        csv_write(&csv_s);
+    }
+    for(int i=0;i<50;i++)
+    {
+        if(csv_read(&csv_s))
+        {
+            printf("%d %d\r\n",csv_s.rrow,csv_s.rows);
+            printf("Name = %s \r\n",csv_s.field[0]);
+            TEST_ASSERT_EQUAL_STRING(names[i],csv_s.field[0]);
+            TEST_ASSERT_EQUAL_STRING(age[i],csv_s.field[1]);
+            TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
+            TEST_ASSERT_EQUAL_STRING("salman2020@gmail.com",csv_s.field[3]);
+        }
+    }
+    TEST_ASSERT_EQUAL_STRING("x","x");
 }
 void test_csv_read1()
 {

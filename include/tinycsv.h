@@ -6,13 +6,13 @@
 // max length of line in the csv
 #define CSV_LINE_LEN 150
 // max lenght of csv file
-#define CSV_FILE_LEN 1024
+#define CSV_FILE_LEN 2048
 typedef struct csv_st{
     int raddr;
     int rrow;
     int waddr;
     int wrow;
-    
+
     int len;
     int cols;
     int rows;
