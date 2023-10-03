@@ -231,6 +231,22 @@ void test_csv_read3()
     TEST_ASSERT_EQUAL_STRING("Male",csv_s.field[2]);
     TEST_ASSERT_EQUAL_STRING("adamsmith@example.com",csv_s.field[3]);
 }
+void test_csv_read4()
+{
+    csv_open(&csv_s);
+    for(int i=0;i<10;i++)
+    {
+        strcpy(csv_s.field[0],"");
+        strcpy(csv_s.field[1],"");
+        strcpy(csv_s.field[2],"");
+        strcpy(csv_s.field[3],"");
+        csv_read_row(&csv_s, 2);
+        TEST_ASSERT_EQUAL_STRING("Jane Smith",csv_s.field[0]);
+        TEST_ASSERT_EQUAL_STRING("25",csv_s.field[1]);
+        TEST_ASSERT_EQUAL_STRING("Female",csv_s.field[2]);
+        TEST_ASSERT_EQUAL_STRING("jsmith2022@fake.com",csv_s.field[3]);
+    }
+}
 void test_csv_count_rows()
 {
     int fileRow;

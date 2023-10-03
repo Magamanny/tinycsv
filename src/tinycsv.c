@@ -67,6 +67,7 @@ int csv_read_row(csv_st *csv, int index)
     int addr;
     csv->raddr = index * CSV_LINE_LEN;
     //TCSV_DEBUG("row = %d\r\n",csv->raddr);
+    csv->rrow = 0;
     return csv_read(csv);
 }
 // reset iter so that read can reiter over it

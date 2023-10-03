@@ -1,17 +1,18 @@
 // Online C compiler to run C program online
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "tinycsv.h"
 // these should be above the actual expected lengths, I use +10 above
 
 char file[1024]=
 "Name,Age,Gender,Email\r\n";
-int afile(char ch)
+int wfile(uint32_t a,char ch)
 {
-    strncat(file, &ch, 1);
+    file[a]=ch;
     return 0;
 }
-char rfile(int a)
+char rfile(uint32_t a)
 {
     return file[a];
 }
@@ -24,7 +25,7 @@ int main() {
     printf("Hello world\r\n");
     // first line is the header
     csv_s.cols = 4;
-    csv_s.afile = afile;
+    csv_s.wfile = wfile;
     csv_s.rfile = rfile;
     
     csv_open(&csv_s);
@@ -71,6 +72,19 @@ int main() {
             break;
         }
     }
+    // index base read
+    csv_read_row(&csv_s, 2);
+    for(int j=0;j<numHeader;j++)
+    {
+        printf("%s = %s, ",header[j],csv_s.field[j]);
+    }
+    csv_read_row(&csv_s, 1);
+    printf("\r\n");
+    for(int j=0;j<numHeader;j++)
+    {
+        printf("%s = %s, ",header[j],csv_s.field[j]);
+    }
+    printf("\r\n");
     printf("%s",file);
     return 0;
 }
