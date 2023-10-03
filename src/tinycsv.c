@@ -60,7 +60,10 @@ int csv_read(csv_st *csv)
 int csv_read_row(csv_st *csv, int index)
 {
     int addr;
-    addr = csv->rfile(csv->dic_addr + index+1);
+    if(csv->rfile!=0)
+    {
+        addr = csv->rfile(csv->dic_addr + index+1);
+    }
     csv->iter = addr;
     return csv_read(csv);
 }
@@ -76,7 +79,10 @@ int csv_open(csv_st *csv)
         siter = csv->iter;
         if(csv_read(csv))
         {
-            csv->wfile(csv->dic_addr+i+1,siter);
+            if(csv->wfile!=0)
+            {
+                csv->wfile(csv->dic_addr+i+1,siter);
+            }
             count++;
         }
         else
@@ -84,7 +90,10 @@ int csv_open(csv_st *csv)
             break;
         }
     }
-    csv->wfile(csv->dic_addr,count);
+    if(csv->wfile!=0)
+    {
+        csv->wfile(csv->dic_addr,count);
+    }
     csv->iter=0;
     return 0;
 }
