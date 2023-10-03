@@ -1,5 +1,6 @@
 #ifndef TINYCSV
 #define TINYCSV
+#include <stdint.h>
 // make sure this is above the expected max lenght
 // max legthn of a single filed
 #define CSV_FIELD_LEN 30
@@ -16,9 +17,8 @@ typedef struct csv_st{
     int len;
     int cols;
     int rows;
-    char (*rfile)(int);// file read function
-    int (*wfile)(int,char); // file write byte to file
-    int (*afile)(char); // file append data function
+    char (*rfile)(uint32_t);// file read function
+    int (*wfile)(uint32_t,char); // file write byte to file
     char field[5][CSV_FIELD_LEN];
 } csv_st;
 // Iterative read

@@ -1,7 +1,6 @@
 #include "unity.h"
 #include "string.h"
 #include "tinycsv.h"
-int eof=0;
 const char fixfile[]=
 "Name,Age,Gender,Email\r\n\
 Adam Johnson,30,Male,johndoe@example.com\r\n\
@@ -10,12 +9,6 @@ Adam Smith,40,Male,adamsmith@example.com\r\n\
 Yuli,20,Female,yoyo20@example.com\r\n";
 char file[1024+150]={0};
 csv_st csv_s;
-int afile(char ch)
-{
-    file[eof++] = ch;
-    file[eof] = 0;
-    return 0;
-}
 int wfile(uint32_t addr,char ch)
 {
     file[addr] = ch;
@@ -35,7 +28,6 @@ void setUp(void)
     csv_s.cols = 4;
     csv_s.rfile = rfile;
     csv_s.wfile = wfile;
-    csv_s.afile = afile;
     for(int i=0,j=0,k=0;i<256;i++)
     {
         file[j] = fixfile[i];
